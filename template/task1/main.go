@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	u "github.com/fabinca/aoc_2024_go/aoc_utils"
 	"log"
 	"os"
 )
