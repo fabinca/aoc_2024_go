@@ -3,9 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	u "github.com/fabinca/aoc_2024_go/aoc_utils"
 	"log"
 	"os"
+
+	u "github.com/fabinca/aoc_2024_go/aoc_utils"
 )
 
 func main() {
@@ -34,7 +35,7 @@ func solve(inputfile string) int {
 		grid = append(grid, line)
 		for col, char := range line {
 			if char == '>' || char == '<' || char == '^' || char == 'v' {
-				guard_location = u.Coordinate{Row: row, Col: col, Direction: char}
+				guard_location = u.Coordinate{Row: row, Col: col, Symbol: char}
 			}
 		}
 		row++
@@ -44,9 +45,9 @@ func solve(inputfile string) int {
 	}
 
 	grid_task_1 := append([]string(nil), grid...)
-	guard_location_task_1 := u.Coordinate{Row: guard_location.Row, Col: guard_location.Col, Direction: guard_location.Direction}
+	guard_location_task_1 := u.Coordinate{Row: guard_location.Row, Col: guard_location.Col, Symbol: guard_location.Symbol}
 	for {
-		if guard_location_task_1.Direction == 'E' {
+		if guard_location_task_1.Symbol == 'E' {
 			break
 		}
 		guard_location_task_1 = walk_in_grid(grid_task_1, guard_location_task_1)
@@ -62,7 +63,7 @@ func solve(inputfile string) int {
 				test_runs++
 				grid_copy := append([]string(nil), grid...)
 				grid_copy[i] = u.ReplaceChar(grid_copy[i], '#', j)
-				go try_walking_with_new_obstacle(grid_copy, u.Coordinate{Row: guard_location.Row, Col: guard_location.Col, Direction: guard_location.Direction}, test_runs, c, c_loc, u.Coordinate{Row: i, Col: j, Direction: 'O'})
+				go try_walking_with_new_obstacle(grid_copy, u.Coordinate{Row: guard_location.Row, Col: guard_location.Col, Symbol: guard_location.Symbol}, test_runs, c, c_loc, u.Coordinate{Row: i, Col: j, Symbol: 'O'})
 			}
 		}
 	}
@@ -83,11 +84,11 @@ func solve(inputfile string) int {
 
 func try_walking_with_new_obstacle(grid []string, guard_location u.Coordinate, idx int, c chan int, c_loc chan u.Coordinate, obstacle u.Coordinate) {
 	for {
-		if guard_location.Direction == 'E' {
+		if guard_location.Symbol == 'E' {
 			c <- 0
 			return
 		}
-		if guard_location.Direction == '4' {
+		if guard_location.Symbol == '4' {
 			c <- 1
 			c_loc <- obstacle
 			return
@@ -98,25 +99,25 @@ func try_walking_with_new_obstacle(grid []string, guard_location u.Coordinate, i
 
 func walk_in_grid(grid []string, before u.Coordinate) u.Coordinate {
 	var next_field u.Coordinate
-	if before.Direction == '^' {
-		next_field = u.Coordinate{Row: before.Row - 1, Col: before.Col, Direction: before.Direction}
-	} else if before.Direction == '>' {
-		next_field = u.Coordinate{Row: before.Row, Col: before.Col + 1, Direction: before.Direction}
-	} else if before.Direction == 'v' {
-		next_field = u.Coordinate{Row: before.Row + 1, Col: before.Col, Direction: before.Direction}
-	} else if before.Direction == '<' {
-		next_field = u.Coordinate{Row: before.Row, Col: before.Col - 1, Direction: before.Direction}
+	if before.Symbol == '^' {
+		next_field = u.Coordinate{Row: before.Row - 1, Col: before.Col, Symbol: before.Symbol}
+	} else if before.Symbol == '>' {
+		next_field = u.Coordinate{Row: before.Row, Col: before.Col + 1, Symbol: before.Symbol}
+	} else if before.Symbol == 'v' {
+		next_field = u.Coordinate{Row: before.Row + 1, Col: before.Col, Symbol: before.Symbol}
+	} else if before.Symbol == '<' {
+		next_field = u.Coordinate{Row: before.Row, Col: before.Col - 1, Symbol: before.Symbol}
 	}
 	if !u.InsideGrid(grid, next_field) {
 		grid[before.Row] = u.ReplaceChar(grid[before.Row], '1', before.Col)
-		return u.Coordinate{Row: before.Row, Col: before.Col, Direction: 'E'}
+		return u.Coordinate{Row: before.Row, Col: before.Col, Symbol: 'E'}
 	}
 	if grid[next_field.Row][next_field.Col] == '#' {
-		next_field = u.Coordinate{Row: before.Row, Col: before.Col, Direction: rotate(before.Direction)}
+		next_field = u.Coordinate{Row: before.Row, Col: before.Col, Symbol: rotate(before.Symbol)}
 	} else {
 		increase_guard_step(grid, before)
 		if grid[before.Row][before.Col] == '4' {
-			return u.Coordinate{Row: before.Row, Col: before.Col, Direction: '4'} // it's a loop!
+			return u.Coordinate{Row: before.Row, Col: before.Col, Symbol: '4'} // it's a loop!
 		}
 	}
 	return next_field
