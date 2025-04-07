@@ -1,11 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	u "github.com/fabinca/aoc_2024_go/aoc_utils"
-	"log"
-	"os"
 )
 
 func main() {
@@ -14,21 +11,7 @@ func main() {
 }
 
 func solve(inputfile string) int {
-	file, err := os.Open(inputfile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	var total int
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
+	lines := u.ReadFileLinesMust(inputfile)
+	total := 0
 	return total
 }
