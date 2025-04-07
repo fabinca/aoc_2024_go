@@ -1,12 +1,12 @@
 package aoc_utils
 
 type Coordinate struct {
-	row       int
-	col       int
-	direction rune
+	Row       int
+	Col       int
+	Direction rune
 }
 
 type Pair struct {
-	a string
-	b string
+	A string
+	B string
 }
