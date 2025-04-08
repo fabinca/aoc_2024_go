@@ -14,7 +14,7 @@ func TestDay(t *testing.T) {
 	}
 }
 
-func TestAntinodesHori(t *testing.T) {
+func TestAntinodes(t *testing.T) {
 	actual := find_antinodes(u.Coordinate{Col: 0, Row: 0}, u.Coordinate{Col: 1, Row: 1}, 3, 3)
 	if len(actual) != 3 {
 		t.Errorf("Missing antinode: only have %+v", actual[0])
